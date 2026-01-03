@@ -64,9 +64,12 @@ cd best-mermaid
 安装脚本会自动：
 - ✅ 检测操作系统（Linux/macOS）
 - ✅ 安装系统依赖（CMake, Boost）
+- ✅ 安装 Chrome/Chromium（用于渲染图表）
 - ✅ 安装 mermaid-cli
 - ✅ 编译项目
 - ✅ 验证安装
+
+**⚠️ 注意**: 脚本会提示是否安装 Chromium。如果不安装，程序将无法渲染图表。
 
 ### 方法 2: 手动安装
 

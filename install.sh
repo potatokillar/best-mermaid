@@ -110,25 +110,96 @@ fi
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📋 第 2 步: 安装 mermaid-cli"
+echo "📋 第 2 步: 安装 Chrome 和 mermaid-cli"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-if command -v mmdc &> /dev/null; then
-    echo "✅ mermaid-cli 已安装: $(mmdc --version 2>&1 | head -1)"
-else
-    echo "📦 安装 mermaid-cli..."
-    echo "提示: 这可能需要几分钟时间..."
-
-    # 跳过 Puppeteer Chrome 下载（减少安装时间）
-    PUPPETEER_SKIP_DOWNLOAD=true npm install -g @mermaid-js/mermaid-cli
-
-    if command -v mmdc &> /dev/null; then
-        echo "✅ mermaid-cli 安装成功: $(mmdc --version 2>&1 | head -1)"
+# 检查 Chrome 是否已安装
+check_chrome() {
+    if [ "$OS" == "linux" ]; then
+        command -v google-chrome &> /dev/null || \
+        command -v chromium-browser &> /dev/null || \
+        command -v chromium &> /dev/null
+    elif [ "$OS" == "macos" ]; then
+        [ -d "/Applications/Google Chrome.app" ]
     else
-        echo "⚠️  警告: mmdc 未在 PATH 中找到"
-        echo "可能需要重启终端或手动添加 npm 全局路径到 PATH"
+        false
     fi
+}
+
+# 安装 Chrome
+install_chrome() {
+    if [ "$OS" == "linux" ]; then
+        echo "📦 安装 Chromium..."
+        sudo apt-get install -y chromium-browser
+    elif [ "$OS" == "macos" ]; then
+        echo "📦 提示: macOS 通常已预装 Chrome"
+        echo "如果没有，请访问 https://www.google.com/chrome/ 下载"
+    fi
+}
+
+echo "🔍 检查 Chrome..."
+if check_chrome; then
+    echo "✅ Chrome 已安装"
+    INSTALL_CHROME=false
+else
+    echo "⚠️  未找到 Chrome"
+    echo ""
+    echo "⚠️  重要提示:"
+    echo "  mermaid-cli 需要 Chrome/Chromium 才能渲染图表"
+    echo "  如果不安装，渲染将会失败并显示错误:"
+    echo "  'Could not find Chrome'"
+    echo ""
+    read -p "是否现在安装 Chromium? (y/n): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        install_chrome
+        INSTALL_CHROME=true
+    else
+        INSTALL_CHROME=false
+        echo "⚠️  跳过 Chrome 安装"
+        echo "  注意: 程序将无法渲染图表，直到安装 Chrome"
+    fi
+fi
+
+echo ""
+echo "📦 安装 mermaid-cli..."
+echo "提示: 这可能需要几分钟时间..."
+
+if [ "$INSTALL_CHROME" = true ]; then
+    # 安装完整的 mermaid-cli（包含 Chrome）
+    npm install -g @mermaid-js/mermaid-cli
+else
+    # 跳过 Puppeteer Chrome 下载
+    echo "⚠️  跳过 Chrome 下载（PUPPETEER_SKIP_DOWNLOAD）"
+    PUPPETEER_SKIP_DOWNLOAD=true npm install -g @mermaid-js/mermaid-cli
+fi
+
+if command -v mmdc &> /dev/null; then
+    echo "✅ mermaid-cli 安装成功: $(mmdc --version 2>&1 | head -1)"
+else
+    echo "⚠️  警告: mmdc 未在 PATH 中找到"
+    echo "可能需要重启终端或手动添加 npm 全局路径到 PATH"
+fi
+
+echo ""
+if ! check_chrome; then
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "⚠️  警告: Chrome 未安装"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "程序已安装，但无法渲染图表，直到安装 Chrome/Chromium。"
+    echo ""
+    echo "安装 Chrome 后，需要安装 chrome-headless-shell:"
+    echo "  npx puppeteer browsers install chrome-headless-shell"
+    echo ""
+    echo "或者使用系统 Chrome (设置环境变量):"
+    if [ "$OS" == "linux" ]; then
+        echo "  export PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser"
+    elif [ "$OS" == "macos" ]; then
+        echo "  export PUPPETEER_EXECUTABLE_PATH=/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome"
+    fi
+    echo ""
 fi
 
 echo ""
