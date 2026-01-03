@@ -235,6 +235,79 @@ mermaid-extractor/
 
 欢迎提交 Issue 和 Pull Request!
 
+## 故障排除
+
+### 问题 1: "Could not find Chrome" 错误
+
+**错误信息**:
+```
+Error: Could not find Chrome (ver. 131.0.6778.204)
+```
+
+**原因**: mermaid-cli 需要 Chrome/Chromium 来渲染图表。
+
+**解决方案**:
+
+#### 方法 A: 安装 Chromium (推荐)
+```bash
+# Ubuntu/Debian
+sudo apt-get install -y chromium-browser
+
+# 验证安装
+chromium-browser --version
+```
+
+#### 方法 B: 安装 chrome-headless-shell
+```bash
+npx puppeteer browsers install chrome-headless-shell
+```
+
+#### 方法 C: 使用系统 Chrome (如果已安装)
+```bash
+# 设置环境变量指向系统 Chrome
+export PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+# 然后运行程序
+./build/mermaid-extractor README.md
+```
+
+### 问题 2: "mmdc: command not found"
+
+**原因**: mermaid-cli 未安装或不在 PATH 中。
+
+**解决方案**:
+```bash
+# 安装 mermaid-cli
+npm install -g @mermaid-js/mermaid-cli
+
+# 验证安装
+mmdc --version
+
+# 如果仍然找不到，检查 npm 全局路径
+npm config get prefix
+# 将输出路径添加到 PATH，例如:
+export PATH=$PATH:/home/user/.npm-global/bin
+```
+
+### 问题 3: 编译错误 "undefined reference to Boost"
+
+**原因**: Boost 库未安装或版本不兼容。
+
+**解决方案**:
+```bash
+# Ubuntu/Debian
+sudo apt-get install libboost-all-dev
+
+# macOS
+brew install boost
+```
+
+### 问题 4: 权限错误 "Permission denied"
+
+**原因**: 安装系统包需要 sudo 权限。
+
+**解决方案**: 使用 `./install.sh` 脚本会自动处理权限问题。
+
 ## 许可证
 
 MIT License
