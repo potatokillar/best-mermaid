@@ -1,4 +1,4 @@
-# Mermaid Extractor
+# Best Mermaid Extractor
 
 从 Markdown 文件中提取 Mermaid 图表并渲染为高质量图片的 C++ CLI 工具。
 
@@ -50,7 +50,27 @@ make
 
 ## 安装
 
-### 前置要求
+### 方法 1: 一键安装（推荐）⚡
+
+```bash
+# 克隆项目
+git clone https://github.com/potatokillar/best-mermaid.git
+cd best-mermaid
+
+# 运行安装脚本（自动安装所有依赖并编译）
+./install.sh
+```
+
+安装脚本会自动：
+- ✅ 检测操作系统（Linux/macOS）
+- ✅ 安装系统依赖（CMake, Boost）
+- ✅ 安装 mermaid-cli
+- ✅ 编译项目
+- ✅ 验证安装
+
+### 方法 2: 手动安装
+
+#### 前置要求
 
 - C++17 编译器 (g++ 11+ 或 clang++ 13+)
 - CMake 3.15+
@@ -58,10 +78,10 @@ make
 - Node.js 18+ (用于 mermaid-cli)
 - npm
 
-### Ubuntu/Debian
+#### Ubuntu/Debian
 
 ```bash
-# 安装依赖
+# 安装系统依赖
 sudo apt-get update
 sudo apt-get install -y \
     build-essential \
@@ -71,15 +91,39 @@ sudo apt-get install -y \
 # 安装 mermaid-cli
 npm install -g @mermaid-js/mermaid-cli
 
-# 构建项目
-git clone <repository-url>
-cd mermaid-extractor
+# 编译项目
+git clone https://github.com/potatokillar/best-mermaid.git
+cd best-mermaid
 mkdir build && cd build
 cmake ..
 make -j$(nproc)
+```
 
-# 安装到系统
+#### macOS
+
+```bash
+# 安装 Homebrew 依赖
+brew install cmake boost
+
+# 安装 mermaid-cli
+npm install -g @mermaid-js/mermaid-cli
+
+# 编译项目
+git clone https://github.com/potatokillar/best-mermaid.git
+cd best-mermaid
+mkdir build && cd build
+cmake ..
+make
+```
+
+### 可选：安装到系统路径
+
+```bash
+cd build
 sudo make install
+
+# 然后可以在任何地方使用
+mermaid-extractor --help
 ```
 
 ## 使用方法
@@ -87,7 +131,10 @@ sudo make install
 ### 基本用法
 
 ```bash
-# 处理单个文件
+# 使用编译后的可执行文件
+./build/mermaid-extractor README.md
+
+# 或者已安装到系统的版本
 mermaid-extractor README.md
 
 # 处理整个目录
@@ -103,7 +150,7 @@ mermaid-extractor -r docs/
 # 指定输出目录
 mermaid-extractor -o ./images README.md
 
-# 输出 PNG 格式
+# 输出 PNG 格式（高分辨率）
 mermaid-extractor -f png README.md
 
 # 自定义 PNG 宽度和 DPI
@@ -111,6 +158,31 @@ mermaid-extractor -f png -w 3000 -d 600 README.md
 
 # 保持原目录结构
 mermaid-extractor -r --keep-structure docs/
+
+# 详细输出模式
+mermaid-extractor --verbose README.md
+```
+
+### 实际示例
+
+```bash
+# 示例 1: 提取 README 中的所有图表
+mermaid-extractor README.md
+# 输出: output/README-flowchart-001.svg
+
+# 示例 2: 生成高分辨率 PNG
+mermaid-extractor -f png -w 4000 -d 600 README.md
+# 输出: output/README-flowchart-001.png (4000px 宽, 600 DPI)
+
+# 示例 3: 批量处理文档目录
+mermaid-extractor -r -o ./diagrams docs/
+# 输出: diagrams/ 目录下所有提取的图表
+
+# 示例 4: 保持目录结构
+mermaid-extractor -r --keep-structure docs/
+# 输出:
+# output/docs/api-guide-sequence-001.svg
+# output/docs/tutorial-flowchart-002.svg
 ```
 
 ## 命令行选项
