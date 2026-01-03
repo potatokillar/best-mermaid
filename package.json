@@ -1,0 +1,11 @@
+{
+  "name": "mermaid-extractor",
+  "version": "1.0.0",
+  "description": "Extract Mermaid diagrams from Markdown files",
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^10.6.1"
+  },
+  "scripts": {
+    "postinstall": "npx mmdc --version || echo 'mermaid-cli not available in PATH'"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(npm --version)",
+      "Bash(g++:*)",
+      "Bash(dpkg:*)",
+      "Bash(grep:*)",
+      "Bash(cmake:*)",
+      "Bash(sudo:*)",
+      "Bash(make:*)",
+      "Bash(./mermaid-extractor:*)",
+      "WebSearch",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

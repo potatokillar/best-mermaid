@@ -1,0 +1,53 @@
+# Build directories
+build/
+bin/
+obj/
+out/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# Compiled files
+*.o
+*.a
+*.so
+*.exe
+mermaid-extractor
+
+# Output directory
+output/
+*.svg
+*.png
+*.mmd
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# npm
+node_modules/
+package-lock.json
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Test files
+test_*.md
+!tests/fixtures/*.md
